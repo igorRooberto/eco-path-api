@@ -1,7 +1,7 @@
 package com.igor.EcoPathAPI.controller;
 
-import com.igor.EcoPathAPI.dto.RouteRequest;
-import com.igor.EcoPathAPI.dto.RouteResponseDto;
+import com.igor.EcoPathAPI.dto.route.RouteRequest;
+import com.igor.EcoPathAPI.dto.route.RouteResponseDto;
 import com.igor.EcoPathAPI.service.RouteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
