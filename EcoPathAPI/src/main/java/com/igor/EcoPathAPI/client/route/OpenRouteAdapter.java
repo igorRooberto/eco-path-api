@@ -1,20 +1,22 @@
-package com.igor.EcoPathAPI.client;
+package com.igor.EcoPathAPI.client.route;
 
-import com.igor.EcoPathAPI.dto.OpenRouteExternalResponse;
-import com.igor.EcoPathAPI.dto.RouteMetrics;
+import com.igor.EcoPathAPI.dto.Coordinate;
+import com.igor.EcoPathAPI.dto.route.OpenRouteExternalResponse;
+import com.igor.EcoPathAPI.dto.route.RouteMetrics;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import java.time.Duration;
+import java.util.List;
 
 @Component
-public class OpenRouteServiceAdapter implements RoutingClient{
+public class OpenRouteAdapter implements RoutingClient {
 
     private final RestClient restClient;
     private final String apiToken;
 
-    public OpenRouteServiceAdapter(@Value("${spring.open.route.url}") String urlAccess,
-                                   @Value("${spring.open.route.token}") String token) {
+    public OpenRouteAdapter(@Value("${spring.open.route.url}") String urlAccess,
+                            @Value("${spring.open.route.token}") String token) {
         this.restClient = RestClient.builder()
                 .baseUrl(urlAccess)
                 .build();
@@ -22,17 +24,24 @@ public class OpenRouteServiceAdapter implements RoutingClient{
     }
 
     @Override
-    public RouteMetrics calculateRouteMetrics(String originCoordinates, String destinationCoordinates) {
+    public RouteMetrics calculateRouteMetrics(Coordinate originCoordinates, Coordinate destinationCoordinates) {
+
+        String startParam = originCoordinates.longitude() +","+ originCoordinates.latitude();
+        String endParam = destinationCoordinates.longitude() + "," + destinationCoordinates.latitude();
 
         OpenRouteExternalResponse externalResponse = restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("api_key",apiToken)
-                        .queryParam("start",originCoordinates)
-                        .queryParam("end",destinationCoordinates)
+                        .queryParam("start",startParam)
+                        .queryParam("end",endParam)
                         .build()
                 )
                 .retrieve().body(OpenRouteExternalResponse.class);
 
+        return mapToDomain(externalResponse);
+    }
+
+    private RouteMetrics mapToDomain(OpenRouteExternalResponse externalResponse){
         if(externalResponse == null || externalResponse.features() == null || externalResponse.features().isEmpty()){
             throw new RuntimeException();
         }
@@ -47,6 +56,9 @@ public class OpenRouteServiceAdapter implements RoutingClient{
         int distanceInCentimeters = (int) (summary.distance() * 100);
         Duration estimatedDuration = Duration.ofSeconds(summary.duration().longValue());
 
-        return new RouteMetrics(distanceInCentimeters, estimatedDuration);
+        List<Coordinate> coordinates = firstFeature.geometry().coordinates().stream()
+                .map(point -> new Coordinate(point.getFirst(), point.get(1))).toList();
+
+        return new RouteMetrics(distanceInCentimeters, estimatedDuration, coordinates);
     }
 }

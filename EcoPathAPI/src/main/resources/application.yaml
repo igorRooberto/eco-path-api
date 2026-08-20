@@ -6,6 +6,8 @@ spring:
     route:
       url: https://api.heigit.org/openrouteservice/v2/directions/foot-walking
       token: ${ORS_TOKEN}
+    meteo:
+      url: https://api.open-meteo.com/v1/forecast
 
   datasource:
     url: jdbc:h2:mem:ecopathdb;DB_CLOSE_DELAY=-1
