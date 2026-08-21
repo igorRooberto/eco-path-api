@@ -1,8 +1,9 @@
 package com.igor.EcoPathAPI.client.route;
 
 import com.igor.EcoPathAPI.dto.Coordinate;
-import com.igor.EcoPathAPI.dto.route.OpenRouteExternalResponse;
+import com.igor.EcoPathAPI.dto.route.apiResponse.OpenRouteExternalResponse;
 import com.igor.EcoPathAPI.dto.route.RouteMetrics;
+import com.igor.EcoPathAPI.exception.OpenRouteIntegrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -43,21 +44,17 @@ public class OpenRouteAdapter implements RoutingClient {
 
     private RouteMetrics mapToDomain(OpenRouteExternalResponse externalResponse){
         if(externalResponse == null || externalResponse.features() == null || externalResponse.features().isEmpty()){
-            throw new RuntimeException();
+            throw new OpenRouteIntegrationException("Nenhuma rota encontrada");
         }
 
         var firstFeature = externalResponse.features().getFirst();
-        if (firstFeature.properties() == null || firstFeature.properties().summary() == null) {
-            throw new RuntimeException();
-        }
-
-        var summary = externalResponse.features().getFirst().properties().summary();
+        var summary = firstFeature.properties().summary();
 
         int distanceInCentimeters = (int) (summary.distance() * 100);
         Duration estimatedDuration = Duration.ofSeconds(summary.duration().longValue());
 
         List<Coordinate> coordinates = firstFeature.geometry().coordinates().stream()
-                .map(point -> new Coordinate(point.getFirst(), point.get(1))).toList();
+                .map(point -> new Coordinate(point.get(1), point.getFirst())).toList();
 
         return new RouteMetrics(distanceInCentimeters, estimatedDuration, coordinates);
     }

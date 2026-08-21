@@ -1,4 +1,4 @@
-HELP.md
+EcoPathAPI/HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -14,10 +14,11 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
 *.iws
+**/.idea/
 *.iml
 *.ipr
+
 
 ### NetBeans ###
 /nbproject/private/

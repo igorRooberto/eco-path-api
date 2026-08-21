@@ -3,6 +3,7 @@ package com.igor.EcoPathAPI.client.weather;
 import com.igor.EcoPathAPI.dto.Coordinate;
 import com.igor.EcoPathAPI.dto.weather.OpenMeteoExternalResponse;
 import com.igor.EcoPathAPI.dto.weather.WeatherMetrics;
+import com.igor.EcoPathAPI.exception.OpenMeteoIntegrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -53,8 +54,8 @@ public class OpenMeteoAdapter implements WeatherClient{
     }
 
     private List<WeatherMetrics> mapToDomain(OpenMeteoExternalResponse[] externalResponse){
-        if (externalResponse == null){
-            return List.of();
+        if (externalResponse == null || externalResponse.length == 0) {
+            throw new OpenMeteoIntegrationException("A API do OpenMeteo não retornou dados climáticos para as coordenadas solicitadas.");
         }
 
         return Arrays.stream(externalResponse)
