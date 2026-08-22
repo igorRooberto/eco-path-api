@@ -11,10 +11,22 @@ Uma API RESTful desenvolvida em **Spring Boot** para simulação e cálculo de r
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+# 🛠️ Tecnologias Utilizadas
 
-*   **Java 21**
-*   **Spring Boot 4.1.0** (Web, Data JPA)
-*   **H2 Database** (Banco de dados em memória para testes rápidos)
-*   **OpenRouteService API** (Serviço externo de geolocalização e rotas)
-*   **Maven** (Gerenciamento de dependências)
+* **Java 21**
+* **Spring Boot (Web, Data JPA)**
+* **PostgreSQL 16** (Banco de dados relacional)
+* **Docker & Docker Compose** (Orquestração de ambiente)
+* **OpenRouteService API** (Serviço externo de geolocalização e rotas)
+* **Open-Meteo API** (Serviço externo de dados meteorológicos)
+* **Maven** (Gerenciamento de dependências)
+
+---
+
+## ⚙️ Como Executar o Projeto
+
+Certifique-se de ter o Docker instalado na sua Máquina
+
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/igorRooberto/eco-path-api.git](https://github.com/igorRooberto/eco-path-api.git)
