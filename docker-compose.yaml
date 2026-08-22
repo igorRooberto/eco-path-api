@@ -1,0 +1,17 @@
+services:
+
+  ecopath-db:
+    image: postgres:16
+    container_name: ecopath-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ecopath_db
+    ports:
+      - "5440:5432"
+    volumes:
+      - ecopath-db-data:/var/lib/postgresql/data
+
+volumes:
+  ecopath-db-data:

@@ -10,18 +10,13 @@ spring:
       url: https://api.open-meteo.com/v1/forecast
 
   datasource:
-    url: jdbc:h2:mem:ecopathdb;DB_CLOSE_DELAY=-1
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:5440/ecopath_db
+    username: postgres
+    password: 123456
+    driver: org.postgresql.Driver
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
       show-sql: true
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
