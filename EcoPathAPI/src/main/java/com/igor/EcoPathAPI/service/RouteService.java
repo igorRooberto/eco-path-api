@@ -7,10 +7,10 @@ import com.igor.EcoPathAPI.dto.route.RouteMetrics;
 import com.igor.EcoPathAPI.dto.route.RouteRequest;
 import com.igor.EcoPathAPI.dto.route.RouteResponseDto;
 import com.igor.EcoPathAPI.dto.weather.WeatherMetrics;
-import com.igor.EcoPathAPI.entites.Route;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,9 +27,7 @@ public class RouteService {
         List<Coordinate> waypoints = extractCheckpoints(metrics.coordinates());
         List<WeatherMetrics> weatherMetrics = weatherClient.getCurrentWeather(waypoints);
 
-        List<RouteResponseDto.WeatherCheckPointDto> weatherForecast = weatherMetrics.stream()
-                .map(m -> new RouteResponseDto.WeatherCheckPointDto(m.temperature(), m.windSpeed(), m.weatherCode()))
-                .toList();
+        List<RouteResponseDto.WeatherCheckPointDto> weatherForecast = buildWeatherForecast(waypoints, weatherMetrics);
 
         return RouteResponseDto.builder()
                 .originName(routeRequest.originName())
@@ -37,6 +35,26 @@ public class RouteService {
                 .routeInfoDto(new RouteResponseDto.RouteSummaryDto(metrics.distanceInCentimeters(), metrics.estimatedTime()))
                 .weatherForecast(weatherForecast)
                 .build();
+    }
+
+    private List<RouteResponseDto.WeatherCheckPointDto> buildWeatherForecast(List<Coordinate> waypoints, List<WeatherMetrics> weatherMetrics){
+
+        List<RouteResponseDto.WeatherCheckPointDto> weatherForecast = new ArrayList<>();
+
+        for(int i = 0; i < waypoints.size(); i++){
+            Coordinate coordinateCurrent = waypoints.get(i);
+            WeatherMetrics weatherCurrent = weatherMetrics.get(i);
+
+            weatherForecast.add(new RouteResponseDto.WeatherCheckPointDto(
+                    coordinateCurrent.latitude(),
+                    coordinateCurrent.longitude(),
+                    weatherCurrent.temperature(),
+                    weatherCurrent.windSpeed(),
+                    weatherCurrent.weatherCode()
+            ));
+        }
+
+        return weatherForecast;
     }
 
     private List<Coordinate> extractCheckpoints(List<Coordinate> fullRoute) {
