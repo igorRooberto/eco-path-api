@@ -15,11 +15,13 @@ public record RouteResponseDto(
 ) {
 
     public record RouteSummaryDto(
-            int distance,
+            int distanceInCentimeters,
             Duration estimatedTime
     ){}
 
     public record WeatherCheckPointDto(
+            double latitude,
+            double longitude,
             double temperature,
             double windSpeed,
             double weatherCode){}
