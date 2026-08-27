@@ -19,7 +19,9 @@ public record RouteResponseDto(
             Duration estimatedTime
     ){}
 
+    @Builder
     public record WeatherCheckPointDto(
+            int order,
             double latitude,
             double longitude,
             double temperature,
