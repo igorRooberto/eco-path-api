@@ -1,5 +1,6 @@
 package com.igor.EcoPathAPI.dto.route;
 
+import com.igor.EcoPathAPI.dto.weather.AirQualityStatus;
 import lombok.Builder;
 
 import java.time.Duration;
@@ -26,6 +27,9 @@ public record RouteResponseDto(
             double longitude,
             double temperature,
             double windSpeed,
-            double weatherCode){}
+            double weatherCode,
+            int airQualityIndex,
+            AirQualityStatus airQualityStatus
+    ){}
 
 }
