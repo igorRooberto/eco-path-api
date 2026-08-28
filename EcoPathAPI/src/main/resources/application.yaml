@@ -8,6 +8,9 @@ spring:
       token: ${ORS_TOKEN}
     meteo:
       url: https://api.open-meteo.com/v1/forecast
+    air:
+      url: https://air-quality-api.open-meteo.com/v1/air-quality
+
 
   datasource:
     url: jdbc:postgresql://localhost:5440/ecopath_db

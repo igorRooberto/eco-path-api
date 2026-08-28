@@ -53,6 +53,8 @@ public class RouteService {
                     .temperature(weatherCurrent.temperature())
                     .windSpeed(weatherCurrent.windSpeed())
                     .weatherCode(weatherCurrent.weatherCode())
+                    .airQualityIndex(weatherCurrent.aqi())
+                    .airQualityStatus(weatherCurrent.airQualityStatus())
                     .build());
         }
 

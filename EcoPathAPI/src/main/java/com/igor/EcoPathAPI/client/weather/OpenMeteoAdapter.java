@@ -1,25 +1,32 @@
 package com.igor.EcoPathAPI.client.weather;
 
 import com.igor.EcoPathAPI.dto.Coordinate;
-import com.igor.EcoPathAPI.dto.weather.OpenMeteoExternalResponse;
+import com.igor.EcoPathAPI.dto.weather.AirQualityExternalResponse;
+import com.igor.EcoPathAPI.dto.weather.AirQualityStatus;
+import com.igor.EcoPathAPI.dto.weather.OpenMeteoWeatherlResponse;
 import com.igor.EcoPathAPI.dto.weather.WeatherMetrics;
 import com.igor.EcoPathAPI.exception.OpenMeteoIntegrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class OpenMeteoAdapter implements WeatherClient{
 
-    private final RestClient restClient;
+    private final RestClient restClientWeather;
+    private final RestClient restClientAir;
 
-    public OpenMeteoAdapter(@Value("${spring.open.meteo.url}") String urlOpenMeteo) {
-        this.restClient = RestClient.builder()
+    public OpenMeteoAdapter(@Value("${spring.open.meteo.url}") String urlOpenMeteo,
+                            @Value("${spring.open.air.url}") String urlAirMeteo) {
+        this.restClientWeather = RestClient.builder()
                 .baseUrl(urlOpenMeteo)
+                .build();
+        this.restClientAir = RestClient.builder()
+                .baseUrl(urlAirMeteo)
                 .build();
     }
 
@@ -29,16 +36,25 @@ public class OpenMeteoAdapter implements WeatherClient{
         String latitudes = getLatitudes(coordinatesList);
         String longitudes = getLongitudes(coordinatesList);
 
-        OpenMeteoExternalResponse[] externalResponse = restClient.get()
+        OpenMeteoWeatherlResponse[] externalResponse = restClientWeather.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("latitude", latitudes)
                         .queryParam("longitude", longitudes)
                         .queryParam("current_weather", true)
                         .build()
                 ).retrieve()
-                .body(OpenMeteoExternalResponse[].class);
+                .body(OpenMeteoWeatherlResponse[].class);
 
-        return mapToDomain(externalResponse);
+        AirQualityExternalResponse[] airQualityExternalResponses = restClientAir.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("latitude", latitudes)
+                        .queryParam("longitude", longitudes)
+                        .queryParam("current", "european_aqi")
+                        .build()
+                ).retrieve()
+                .body(AirQualityExternalResponse[].class);
+
+        return mapToDomain(externalResponse, airQualityExternalResponses);
     }
 
     private String getLatitudes(List<Coordinate> coordinates){
@@ -53,17 +69,32 @@ public class OpenMeteoAdapter implements WeatherClient{
                 .collect(Collectors.joining(","));
     }
 
-    private List<WeatherMetrics> mapToDomain(OpenMeteoExternalResponse[] externalResponse){
+    private List<WeatherMetrics> mapToDomain(OpenMeteoWeatherlResponse[] externalResponse, AirQualityExternalResponse[] airQualityExternalResponses){
         if (externalResponse == null || externalResponse.length == 0) {
             throw new OpenMeteoIntegrationException("A API do OpenMeteo não retornou dados climáticos para as coordenadas solicitadas.");
         }
 
-        return Arrays.stream(externalResponse)
-                .map(response -> new WeatherMetrics(
-                        response.current_weather().temperature(),
-                        response.current_weather().windspeed(),
-                        response.current_weather().weathercode()
-                        ))
-                        .toList();
+        if (airQualityExternalResponses == null || airQualityExternalResponses.length == 0) {
+            throw new OpenMeteoIntegrationException("A API do OpenMeteo não retornou dados sobre a Qualidade do Ar para as coordenadas solicitadas.");
+        }
+
+        List<WeatherMetrics> metrics = new ArrayList<>();
+
+        for (int i = 0; i < externalResponse.length; i++){
+            OpenMeteoWeatherlResponse currentOpenMeteo = externalResponse[i];
+            AirQualityExternalResponse currentAirQuality = airQualityExternalResponses[i];
+
+            AirQualityStatus status = AirQualityStatus.fromAqi(currentAirQuality.current().european_aqi());
+
+            metrics.add(new WeatherMetrics(
+                    currentOpenMeteo.current_weather().temperature(),
+                    currentOpenMeteo.current_weather().windspeed(),
+                    currentOpenMeteo.current_weather().weathercode(),
+                    currentAirQuality.current().european_aqi(),
+                    status
+                    ));
+        }
+
+        return metrics;
     }
 }
