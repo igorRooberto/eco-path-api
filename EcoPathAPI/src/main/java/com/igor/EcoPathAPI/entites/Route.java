@@ -14,11 +14,13 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id",nullable = false,unique = true,updatable = false)
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @Column(name = "origin_name",nullable = false)
