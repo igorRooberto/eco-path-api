@@ -142,10 +142,4 @@ A proposta é utilizar essas informações em conjunto com os dados fornecidos p
 
 ---
 
-## 📌 Próximos Passos
 
-- [ ] Integrar os dados de rota com as condições climáticas;
-- [ ] Implementar análise das condições meteorológicas durante o percurso;
-- [ ] Adicionar persistência do histórico de rotas;
-- [ ] Melhorar o tratamento de falhas das APIs externas;
-- [ ] Aprimorar a arquitetura e organização do projeto.
