@@ -13,10 +13,11 @@ A ideia central do EcoPath é combinar dados de rotas e condições meteorológi
 
 ---
 
-# 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 * **Java 21**
 * **Spring Boot (Web, Data JPA)**
+* **Spring Security & JWT** (Autenticação e Autorização)
 * **PostgreSQL 16** (Banco de dados relacional)
 * **Docker & Docker Compose** (Orquestração de ambiente)
 * **OpenRouteService API** (Serviço externo de geolocalização e rotas)
