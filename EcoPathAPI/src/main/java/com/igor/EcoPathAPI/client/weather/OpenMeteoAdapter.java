@@ -5,7 +5,7 @@ import com.igor.EcoPathAPI.dto.weather.AirQualityExternalResponse;
 import com.igor.EcoPathAPI.dto.weather.AirQualityStatus;
 import com.igor.EcoPathAPI.dto.weather.OpenMeteoWeatherlResponse;
 import com.igor.EcoPathAPI.dto.weather.WeatherMetrics;
-import com.igor.EcoPathAPI.exception.OpenMeteoIntegrationException;
+import com.igor.EcoPathAPI.exception.base.IntegrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -71,11 +71,11 @@ public class OpenMeteoAdapter implements WeatherClient{
 
     private List<WeatherMetrics> mapToDomain(OpenMeteoWeatherlResponse[] externalResponse, AirQualityExternalResponse[] airQualityExternalResponses){
         if (externalResponse == null || externalResponse.length == 0) {
-            throw new OpenMeteoIntegrationException("A API do OpenMeteo não retornou dados climáticos para as coordenadas solicitadas.");
+            throw new IntegrationException("A API do OpenMeteo não retornou dados climáticos para as coordenadas solicitadas.");
         }
 
         if (airQualityExternalResponses == null || airQualityExternalResponses.length == 0) {
-            throw new OpenMeteoIntegrationException("A API do OpenMeteo não retornou dados sobre a Qualidade do Ar para as coordenadas solicitadas.");
+            throw new IntegrationException("A API do OpenMeteo não retornou dados sobre a Qualidade do Ar para as coordenadas solicitadas.");
         }
 
         List<WeatherMetrics> metrics = new ArrayList<>();
