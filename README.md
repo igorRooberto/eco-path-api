@@ -5,7 +5,7 @@
 
 > **A Motivação:** Eu sempre gostei muito de pedalar e planejar rotas por ciclovias, mas o clima frequentemente deixava a desejar e acabava me pegando de surpresa no meio do caminho. O EcoPath nasceu exatamente dessa minha dor pessoal. Senti a necessidade de criar uma ferramenta inteligente que não apenas calcule o melhor trajeto, mas que sirva de base para cruzar esses dados de rota com variáveis climáticas, garantindo um pedal muito mais seguro, previsível e agradável.
 
-> 🚧 **Status do Projeto:** Este sistema está em **desenvolvimento ativo**. Estou construindo e aprimorando a arquitetura aos poucos. As próximas etapas incluem a integração com dados climáticos em tempo real e a persistência de histórico de rotas.
+> 🚧 **Status do Projeto:** Este sistema está em desenvolvimento ativo. No momento, estou focado na implementação da camada de autenticação e autorização utilizando **Spring Security e JWT**. As próximas etapas incluem a integração com dados climáticos em tempo real e a persistência de histórico de rotas.
 
 Uma API RESTful desenvolvida em Spring Boot para simulação e cálculo de rotas para ciclistas. O sistema utiliza a OpenRouteService API para calcular rotas e obter informações de distância e tempo estimado entre coordenadas geográficas, enquanto a Open-Meteo API fornece dados meteorológicos para permitir, posteriormente, o cruzamento das condições climáticas com as rotas calculadas.
 
