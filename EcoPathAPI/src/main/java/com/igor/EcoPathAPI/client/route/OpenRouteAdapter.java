@@ -3,7 +3,7 @@ package com.igor.EcoPathAPI.client.route;
 import com.igor.EcoPathAPI.dto.Coordinate;
 import com.igor.EcoPathAPI.dto.route.apiResponse.OpenRouteExternalResponse;
 import com.igor.EcoPathAPI.dto.route.RouteMetrics;
-import com.igor.EcoPathAPI.exception.OpenRouteIntegrationException;
+import com.igor.EcoPathAPI.exception.base.IntegrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -44,7 +44,7 @@ public class OpenRouteAdapter implements RoutingClient {
 
     private RouteMetrics mapToDomain(OpenRouteExternalResponse externalResponse){
         if(externalResponse == null || externalResponse.features() == null || externalResponse.features().isEmpty()){
-            throw new OpenRouteIntegrationException("Nenhuma rota encontrada");
+            throw new IntegrationException("Nenhuma rota encontrada");
         }
 
         var firstFeature = externalResponse.features().getFirst();

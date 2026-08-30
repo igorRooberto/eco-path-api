@@ -23,3 +23,10 @@ spring:
       ddl-auto: update
       show-sql: true
 
+  api:
+    security:
+      token:
+        secret=${JWT_SECRET}:
+
+server:
+  port: 8081
