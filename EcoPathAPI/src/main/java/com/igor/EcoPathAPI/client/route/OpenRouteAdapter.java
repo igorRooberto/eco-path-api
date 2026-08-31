@@ -50,12 +50,12 @@ public class OpenRouteAdapter implements RoutingClient {
         var firstFeature = externalResponse.features().getFirst();
         var summary = firstFeature.properties().summary();
 
-        int distanceInCentimeters = (int) (summary.distance() * 100);
-        Duration estimatedDuration = Duration.ofSeconds(summary.duration().longValue());
+        int distanceInMeters = (int) Math.round(summary.distance());
+        int durationInSeconds = (int) Math.round(summary.duration());
 
         List<Coordinate> coordinates = firstFeature.geometry().coordinates().stream()
                 .map(point -> new Coordinate(point.get(1), point.getFirst())).toList();
 
-        return new RouteMetrics(distanceInCentimeters, estimatedDuration, coordinates);
+        return new RouteMetrics(distanceInMeters, durationInSeconds, coordinates);
     }
 }

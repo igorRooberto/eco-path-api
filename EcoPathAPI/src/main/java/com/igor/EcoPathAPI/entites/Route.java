@@ -29,11 +29,10 @@ public class Route {
     @Column(name = "destination_name",nullable = false)
     private String destinationName;
 
-    @Column(name = "estimated_time",nullable = false)
-    @DurationUnit(ChronoUnit.SECONDS)
-    private Duration estimatedTime;
+    @Column(name = "duration_in_seconds", nullable = false)
+    private int durationInSeconds;
 
-    @Column(name = "distance_in_centimeters",nullable = false)
-    private int distanceInCentimeters;
+    @Column(name = "distance_in_Meters",nullable = false)
+    private int distanceInMeters;
 
 }

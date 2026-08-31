@@ -6,8 +6,8 @@ import java.time.Duration;
 import java.util.List;
 
 public record RouteMetrics(
-        int distanceInCentimeters,
-        Duration estimatedTime,
+        int distanceInMeters,
+        int durationInSeconds,
         List<Coordinate> coordinates
 ) {
 }

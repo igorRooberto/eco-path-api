@@ -27,6 +27,3 @@ spring:
     security:
       token:
         secret=${JWT_SECRET}:
-
-server:
-  port: 8081

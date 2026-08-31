@@ -33,7 +33,7 @@ public class RouteService {
         return RouteResponseDto.builder()
                 .originName(routeRequest.originName())
                 .destinationName(routeRequest.destinationName())
-                .routeInfoDto(new RouteResponseDto.RouteSummaryDto(metrics.distanceInCentimeters(), metrics.estimatedTime()))
+                .routeInfoDto(new RouteResponseDto.RouteSummaryDto(metrics.distanceInMeters(), metrics.durationInSeconds()))
                 .weatherForecast(weatherForecast)
                 .build();
     }

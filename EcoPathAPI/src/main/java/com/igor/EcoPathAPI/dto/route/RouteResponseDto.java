@@ -16,8 +16,8 @@ public record RouteResponseDto(
 ) {
 
     public record RouteSummaryDto(
-            int distanceInCentimeters,
-            Duration estimatedTime
+            int distanceInMeters,
+            int durationInSeconds
     ){}
 
     @Builder
@@ -27,7 +27,7 @@ public record RouteResponseDto(
             double longitude,
             double temperature,
             double windSpeed,
-            double weatherCode,
+            int weatherCode,
             int airQualityIndex,
             AirQualityStatus airQualityStatus
     ){}
