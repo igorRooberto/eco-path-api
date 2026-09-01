@@ -5,24 +5,20 @@
 
 > **A Motivação:** Eu sempre gostei muito de pedalar e planejar rotas por ciclovias, mas o clima frequentemente deixava a desejar e acabava me pegando de surpresa no meio do caminho. O EcoPath nasceu exatamente dessa minha dor pessoal. Senti a necessidade de criar uma ferramenta inteligente que não apenas calcule o melhor trajeto, mas que sirva de base para cruzar esses dados de rota com variáveis climáticas, garantindo um pedal muito mais seguro, previsível e agradável.
 
-> 🚧 **Status do Projeto:** Este sistema está em desenvolvimento ativo. No momento, estou focado na implementação da camada de autenticação e autorização utilizando **Spring Security e JWT**. As próximas etapas incluem a integração com dados climáticos em tempo real e a persistência de histórico de rotas.
+> **🚧 Status do Projeto:** 
+Este sistema está em desenvolvimento ativo. A camada de segurança com Spring Security/JWT e a integração arquitetural com APIs externas (OpenRoute e Open-Meteo) já estão implementadas com modelagem de dados de alta precisão. 
+**Foco Atual:** Implementação de uma suíte abrangente de **Testes Unitários** (JUnit 5 e Mockito) para garantir a resiliência das regras de negócio e das conversões de dados, preparando o repositório para a futura integração de pipelines de CI/CD.
 
-Uma API RESTful desenvolvida em Spring Boot para simulação e cálculo de rotas para ciclistas. O sistema utiliza a OpenRouteService API para calcular rotas e obter informações de distância e tempo estimado entre coordenadas geográficas, enquanto a Open-Meteo API fornece dados meteorológicos para permitir, posteriormente, o cruzamento das condições climáticas com as rotas calculadas.
+Uma API RESTful desenvolvida em Spring Boot para simulação e cálculo de rotas para ciclistas. O sistema utiliza a OpenRouteService API para calcular rotas e obter informações de distância e tempo estimado entre coordenadas geográficas, enquanto a Open-Meteo API fornece dados meteorológicos para permitir, posteriormente, o cruzamento das condições climáticas com as rotas calculadas. A ideia central do EcoPath é combinar dados de rotas e condições meteorológicas, permitindo construir uma experiência mais segura e previsível para quem utiliza a bicicleta como meio de transporte ou lazer.
 
-A ideia central do EcoPath é combinar dados de rotas e condições meteorológicas, permitindo construir uma experiência mais segura e previsível para quem utiliza a bicicleta como meio de transporte ou lazer.
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-* **Java 21**
-* **Spring Boot (Web, Data JPA)**
-* **Spring Security & JWT** (Autenticação e Autorização)
-* **PostgreSQL 16** (Banco de dados relacional)
-* **Docker & Docker Compose** (Orquestração de ambiente)
-* **OpenRouteService API** (Serviço externo de geolocalização e rotas)
-* **Open-Meteo API** (Serviço externo de dados meteorológicos)
-* **Maven** (Gerenciamento de dependências)
+**🛠️ Tecnologias Utilizadas**
+* Java 21
+* Spring Boot (Web, Data JPA)
+* Spring Security & JWT (Autenticação e Autorização)
+* PostgreSQL 16 (Banco de dados relacional)
+* Docker & Docker Compose (Orquestração de ambiente)
+* JUnit 5 & Mockito (Testes Unitários)
+* OpenRouteService API & Open-Meteo API (Serviços externos)
 
 ---
 
