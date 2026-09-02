@@ -44,7 +44,7 @@ public class OpenRouteAdapter implements RoutingClient {
 
     private RouteMetrics mapToDomain(OpenRouteExternalResponse externalResponse){
         if(externalResponse == null || externalResponse.features() == null || externalResponse.features().isEmpty()){
-            throw new IntegrationException("Nenhuma rota encontrada");
+            throw new IntegrationException("Falha de comunicação com OpenRouteService");
         }
 
         var firstFeature = externalResponse.features().getFirst();
