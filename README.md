@@ -139,4 +139,12 @@ A proposta é utilizar essas informações em conjunto com os dados fornecidos p
 
 ---
 
+🗺️ Roadmap / Próximas Evoluções
+
+O EcoPath está em constante evolução arquitetural. As próximas features planejadas para o projeto incluem:
+- [ ] **Múltiplas Rotas Alternativas:** Migração do consumo da OpenRouteService de `GET` para `POST` para suportar o cálculo de trajetos alternativos.
+- [ ] **Estratégia de Lazy Loading & Cache:** Implementação de cache em memória (`ConcurrentHashMap`) para gerenciar o fluxo de dois passos (envio de resumo leve seguido pelo resgate da rota detalhada via UUID).
+- [ ] **Strategy Pattern:** Desacoplamento dos perfis de mobilidade ativa (ciclismo e caminhada) em estratégias independentes.
+- [ ] **Virtual Threads (Java 21):** Utilização de threads virtuais para paralelizar e otimizar o consumo das APIs de clima (Open-Meteo) para múltiplos trajetos.
+
 
