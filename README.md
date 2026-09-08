@@ -121,6 +121,10 @@ A API recebe as coordenadas de origem e destino e retorna informações utilizad
 
 Esses dados são utilizados como base para o planejamento das rotas realizadas pelos usuários.
 
+🔗 **Documentação:** [OpenRouteService API Documentation](https://openrouteservice.org/dev/#/api-docs)
+
+---
+
 ### ⛅ Open-Meteo
 
 A Open-Meteo é utilizada para obter informações meteorológicas e ambientais relacionadas à localização do percurso.
@@ -136,6 +140,10 @@ A integração permite consultar informações como:
 * Previsões para diferentes horários.
 
 A proposta é utilizar essas informações em conjunto com os dados fornecidos pelo OpenRouteService, permitindo analisar as condições climáticas e ambientais ao longo do percurso.
+
+🔗 **Documentações:**
+* [Open-Meteo Weather Forecast API Documentation](https://open-meteo.com/en/docs)
+* [Open-Meteo Air Quality API Documentation](https://open-meteo.com/en/docs/air-quality-api)
 
 ---
 
