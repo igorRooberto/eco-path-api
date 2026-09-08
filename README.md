@@ -75,7 +75,7 @@ docker compose logs -f nome-do-servico
 ```
 
 ### 4. **Configuração da Chave de Acesso (Token):**
-   O serviço utiliza a API do [OpenRouteService](https://openrouteservice.org/), que exige uma chave de acesso para funcionar. Acesse o site oficial, crie sua conta gratuita para gerar o token e configure-o no arquivo `.env` na raiz do projeto:
+   O serviço utiliza a API do 🔗 **Documentação:** [OpenRouteService API Documentation](https://openrouteservice.org/dev/), que exige uma chave de acesso para funcionar. Acesse o site oficial, crie sua conta gratuita para gerar o token e configure-o no arquivo `.env` na raiz do projeto:
    ```env
    ORS_TOKEN=seu_token_aqui
 ```
