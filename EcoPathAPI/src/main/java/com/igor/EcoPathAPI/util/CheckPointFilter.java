@@ -1,7 +1,7 @@
 package com.igor.EcoPathAPI.util;
 
 
-import com.igor.EcoPathAPI.dto.Coordinate;
+import com.igor.EcoPathAPI.dto.route.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
 

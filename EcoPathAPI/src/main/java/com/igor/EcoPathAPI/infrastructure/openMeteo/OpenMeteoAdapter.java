@@ -1,10 +1,11 @@
-package com.igor.EcoPathAPI.client.weather;
+package com.igor.EcoPathAPI.infrastructure.openMeteo;
 
-import com.igor.EcoPathAPI.dto.Coordinate;
-import com.igor.EcoPathAPI.dto.weather.AirQualityExternalResponse;
-import com.igor.EcoPathAPI.dto.weather.AirQualityStatus;
-import com.igor.EcoPathAPI.dto.weather.OpenMeteoWeatherlResponse;
-import com.igor.EcoPathAPI.dto.weather.WeatherMetrics;
+import com.igor.EcoPathAPI.domain.port.WeatherClient;
+import com.igor.EcoPathAPI.dto.route.Coordinate;
+import com.igor.EcoPathAPI.infrastructure.openMeteo.dto.AirQualityExternalResponse;
+import com.igor.EcoPathAPI.entites.enums.AirQualityStatus;
+import com.igor.EcoPathAPI.infrastructure.openMeteo.dto.OpenMeteoWeatherResponse;
+import com.igor.EcoPathAPI.domain.model.WeatherMetrics;
 import com.igor.EcoPathAPI.exception.base.IntegrationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class OpenMeteoAdapter implements WeatherClient{
+public class OpenMeteoAdapter implements WeatherClient {
 
     private final RestClient restClientWeather;
     private final RestClient restClientAir;
@@ -36,14 +37,14 @@ public class OpenMeteoAdapter implements WeatherClient{
         String latitudes = getLatitudes(coordinatesList);
         String longitudes = getLongitudes(coordinatesList);
 
-        OpenMeteoWeatherlResponse[] externalResponse = restClientWeather.get()
+        OpenMeteoWeatherResponse[] externalResponse = restClientWeather.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("latitude", latitudes)
                         .queryParam("longitude", longitudes)
                         .queryParam("current_weather", true)
                         .build()
                 ).retrieve()
-                .body(OpenMeteoWeatherlResponse[].class);
+                .body(OpenMeteoWeatherResponse[].class);
 
         AirQualityExternalResponse[] airQualityExternalResponses = restClientAir.get()
                 .uri(uriBuilder -> uriBuilder
@@ -69,7 +70,7 @@ public class OpenMeteoAdapter implements WeatherClient{
                 .collect(Collectors.joining(","));
     }
 
-    private List<WeatherMetrics> mapToDomain(OpenMeteoWeatherlResponse[] externalResponse, AirQualityExternalResponse[] airQualityExternalResponses){
+    private List<WeatherMetrics> mapToDomain(OpenMeteoWeatherResponse[] externalResponse, AirQualityExternalResponse[] airQualityExternalResponses){
         if (externalResponse == null || externalResponse.length == 0) {
             throw new IntegrationException("A API do OpenMeteo não retornou dados climáticos para as coordenadas solicitadas.");
         }
@@ -81,7 +82,7 @@ public class OpenMeteoAdapter implements WeatherClient{
         List<WeatherMetrics> metrics = new ArrayList<>();
 
         for (int i = 0; i < externalResponse.length; i++){
-            OpenMeteoWeatherlResponse currentOpenMeteo = externalResponse[i];
+            OpenMeteoWeatherResponse currentOpenMeteo = externalResponse[i];
             AirQualityExternalResponse currentAirQuality = airQualityExternalResponses[i];
 
             AirQualityStatus status = AirQualityStatus.fromAqi(currentAirQuality.current().european_aqi());

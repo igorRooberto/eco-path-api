@@ -1,4 +1,6 @@
-package com.igor.EcoPathAPI.dto.weather;
+package com.igor.EcoPathAPI.domain.model;
+
+import com.igor.EcoPathAPI.entites.enums.AirQualityStatus;
 
 public record WeatherMetrics(
         double temperature,

@@ -1,16 +1,22 @@
 spring:
   application:
     name: EcoPathAPI
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
 
   open:
     route:
-      url: https://api.heigit.org/openrouteservice/v2/directions/foot-walking
+      url: https://api.heigit.org/openrouteservice/
       token: ${ORS_TOKEN}
     meteo:
       url: https://api.open-meteo.com/v1/forecast
     air:
       url: https://air-quality-api.open-meteo.com/v1/air-quality
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
   datasource:
     url: jdbc:postgresql://localhost:5440/ecopath_db
