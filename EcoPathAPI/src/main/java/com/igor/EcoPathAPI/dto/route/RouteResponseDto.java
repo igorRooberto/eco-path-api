@@ -1,9 +1,8 @@
 package com.igor.EcoPathAPI.dto.route;
 
-import com.igor.EcoPathAPI.dto.weather.AirQualityStatus;
+import com.igor.EcoPathAPI.entites.enums.AirQualityStatus;
 import lombok.Builder;
 
-import java.time.Duration;
 import java.util.List;
 
 @Builder
@@ -11,25 +10,15 @@ public record RouteResponseDto(
 
         String originName,
         String destinationName,
-        RouteSummaryDto routeInfoDto,
-        List<WeatherCheckPointDto> weatherForecast
+        List<RouteSummaryDto> routesInfoDto
 ) {
 
     public record RouteSummaryDto(
+            String routeId,
             int distanceInMeters,
-            int durationInSeconds
+            int durationInSeconds,
+            String geometry
     ){}
 
-    @Builder
-    public record WeatherCheckPointDto(
-            int order,
-            double latitude,
-            double longitude,
-            double temperature,
-            double windSpeed,
-            int weatherCode,
-            int airQualityIndex,
-            AirQualityStatus airQualityStatus
-    ){}
 
 }

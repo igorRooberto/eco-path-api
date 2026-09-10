@@ -1,4 +1,4 @@
-package com.igor.EcoPathAPI.dto.weather;
+package com.igor.EcoPathAPI.infrastructure.openMeteo.dto;
 
 public record AirQualityExternalResponse(Current current) {
 

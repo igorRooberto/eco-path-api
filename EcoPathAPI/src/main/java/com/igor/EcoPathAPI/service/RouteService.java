@@ -1,17 +1,16 @@
 package com.igor.EcoPathAPI.service;
 
-import com.igor.EcoPathAPI.client.route.RoutingClient;
-import com.igor.EcoPathAPI.client.weather.WeatherClient;
-import com.igor.EcoPathAPI.dto.Coordinate;
-import com.igor.EcoPathAPI.dto.route.RouteMetrics;
+import com.igor.EcoPathAPI.domain.port.RoutingClient;
+import com.igor.EcoPathAPI.domain.model.RouteMetrics;
 import com.igor.EcoPathAPI.dto.route.RouteRequest;
 import com.igor.EcoPathAPI.dto.route.RouteResponseDto;
-import com.igor.EcoPathAPI.dto.weather.WeatherMetrics;
-import com.igor.EcoPathAPI.util.CheckPointFilter;
+import com.igor.EcoPathAPI.infrastructure.openRoute.dto.OpenRouteRequest;
+import com.igor.EcoPathAPI.repository.RouteCacheRepository;
+import com.igor.EcoPathAPI.strategy.RouteStrategy;
+import com.igor.EcoPathAPI.strategy.RouteStrategyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,49 +18,30 @@ import java.util.List;
 public class RouteService {
 
     private final RoutingClient routingClient;
-    private final WeatherClient weatherClient;
+    private final RouteStrategyFactory routeStrategyFactory;
+    private final RouteCacheRepository routeCacheRepository;
 
     public RouteResponseDto simulateRoute(RouteRequest routeRequest) {
 
-        RouteMetrics metrics = routingClient.calculateRouteMetrics(routeRequest.originCoordinates(), routeRequest.destinationCoordinates());
+        RouteStrategy strategy = routeStrategyFactory.getStrategy(routeRequest.profile());
 
-        List<Coordinate> waypoints = CheckPointFilter.extractCheckpoints(metrics.coordinates());
-        List<WeatherMetrics> weatherMetrics = weatherClient.getCurrentWeather(waypoints);
+        OpenRouteRequest openRouteRequest = strategy.buildRequest(routeRequest.originCoordinates(), routeRequest.destinationCoordinates());
 
-        List<RouteResponseDto.WeatherCheckPointDto> weatherForecast = buildWeatherForecast(waypoints, weatherMetrics);
+        List<RouteMetrics> metrics = routingClient.calculateRouteMetrics(routeRequest.profile(),openRouteRequest);
 
-        return RouteResponseDto.builder()
-                .originName(routeRequest.originName())
-                .destinationName(routeRequest.destinationName())
-                .routeInfoDto(new RouteResponseDto.RouteSummaryDto(metrics.distanceInMeters(), metrics.durationInSeconds()))
-                .weatherForecast(weatherForecast)
-                .build();
+        routeCacheRepository.saveAll(metrics);
+
+        List<RouteResponseDto.RouteSummaryDto> routeSummaryDtos = metrics.stream().map(metric ->
+                new RouteResponseDto.RouteSummaryDto(
+                        metric.routeId(),
+                        metric.distanceInMeters(),
+                        metric.durationInSeconds(),
+                        metric.geometry())).toList();
+
+        return new RouteResponseDto(
+                routeRequest.originName(),
+                routeRequest.destinationName(),
+                routeSummaryDtos
+        );
     }
-
-    private List<RouteResponseDto.WeatherCheckPointDto> buildWeatherForecast(List<Coordinate> waypoints, List<WeatherMetrics> weatherMetrics) {
-
-        List<RouteResponseDto.WeatherCheckPointDto> weatherForecast = new ArrayList<>();
-
-        for (int i = 0; i < waypoints.size(); i++) {
-            Coordinate coordinateCurrent = waypoints.get(i);
-            WeatherMetrics weatherCurrent = weatherMetrics.get(i);
-
-            weatherForecast.add(RouteResponseDto.WeatherCheckPointDto.builder()
-                    .order(i + 1)
-                    .latitude(coordinateCurrent.latitude())
-                    .longitude(coordinateCurrent.longitude())
-                    .temperature(weatherCurrent.temperature())
-                    .windSpeed(weatherCurrent.windSpeed())
-                    .weatherCode(weatherCurrent.weatherCode())
-                    .airQualityIndex(weatherCurrent.aqi())
-                    .airQualityStatus(weatherCurrent.airQualityStatus())
-                    .build());
-        }
-
-        return weatherForecast;
-    }
-
-
-
-
 }

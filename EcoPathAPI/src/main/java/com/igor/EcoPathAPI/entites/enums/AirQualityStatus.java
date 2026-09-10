@@ -1,4 +1,4 @@
-package com.igor.EcoPathAPI.dto.weather;
+package com.igor.EcoPathAPI.entites.enums;
 
 public enum AirQualityStatus {
 

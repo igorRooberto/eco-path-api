@@ -22,7 +22,7 @@ public class RouteController {
     @PostMapping("/simulate")
     public ResponseEntity<RouteResponseDto> simulateRoute(@RequestBody RouteRequest routeRequest) {
         RouteResponseDto response = routeService.simulateRoute(routeRequest);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
     }
 }
 
