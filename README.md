@@ -9,149 +9,106 @@
 Este sistema está em desenvolvimento ativo. A camada de segurança com Spring Security/JWT e a integração arquitetural com APIs externas (OpenRoute e Open-Meteo) já estão implementadas com modelagem de dados de alta precisão. 
 **Foco Atual:** Implementação de uma suíte abrangente de **Testes Unitários** (JUnit 5 e Mockito) para garantir a resiliência das regras de negócio e das conversões de dados, preparando o repositório para a futura integração de pipelines de CI/CD.
 
-Uma API RESTful desenvolvida em Spring Boot para simulação e cálculo de rotas para ciclistas. O sistema utiliza a OpenRouteService API para calcular rotas e obter informações de distância e tempo estimado entre coordenadas geográficas, enquanto a Open-Meteo API fornece dados meteorológicos para permitir, posteriormente, o cruzamento das condições climáticas com as rotas calculadas. A ideia central do EcoPath é combinar dados de rotas e condições meteorológicas, permitindo construir uma experiência mais segura e previsível para quem utiliza a bicicleta como meio de transporte ou lazer.
-
-**🛠️ Tecnologias Utilizadas**
-* Java 21
-* Spring Boot (Web, Data JPA)
-* Spring Security & JWT (Autenticação e Autorização)
-* PostgreSQL 16 (Banco de dados relacional)
-* Docker & Docker Compose (Orquestração de ambiente)
-* JUnit 5 & Mockito (Testes Unitários)
-* OpenRouteService API & Open-Meteo API (Serviços externos)
+Uma API RESTful desenvolvida em Spring Boot para simulação e cálculo de rotas para ciclistas. O sistema utiliza a OpenRouteService API para calcular rotas e obter informações de distância e tempo estimado entre coordenadas geográficas, enquanto a Open-Meteo API fornece dados meteorológicos para permitir o cruzamento das condições climáticas com as rotas calculadas.
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## 🛠️ Tecnologias Utilizadas
 
-Certifique-se de ter o **Docker** instalado e em execução na sua máquina.
+* **Java 21**
+* **Spring Boot 3** (Web, Data JPA, Security)
+* **Spring Security & JWT** (Autenticação e Autorização)
+* **PostgreSQL 16** (Banco de dados relacional)
+* **Docker & Docker Compose** (Containerização)
+* **JUnit 5 & Mockito** (Testes Unitários)
+* **OpenRouteService API & Open-Meteo API** (Serviços externos)
 
-### 1. Clone o repositório
+---
 
-```bash
-git clone https://github.com/igorRoberto/eco-path-api.git
-```
+## ⚙️ Execução Rápida
 
-Entre na pasta do projeto:
+### Pré-requisitos
+* Docker e Docker Compose instalados.
+* Chave de acesso gratuita da [OpenRouteService API](https://openrouteservice.org/dev/).
 
-```bash
-cd eco-path-api
-```
+### Rodando a Aplicação
 
-### 2. Suba a aplicação com Docker Compose
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/igorRoberto/eco-path-api.git](https://github.com/igorRoberto/eco-path-api.git)
+   cd eco-path-api
+   ```
 
-Execute:
-
-```bash
-docker compose up --build
-```
-
-O comando irá construir a aplicação e iniciar todos os serviços necessários, incluindo o banco de dados.
-
-Para executar a aplicação em segundo plano:
-
-```bash
-docker compose up --build -d
-```
-
-### 3. Verifique os containers
-
-Para verificar se os containers estão em execução:
-
-```bash
-docker compose ps
-```
-
-Para acompanhar os logs da aplicação:
-
-```bash
-docker compose logs -f
-```
-
-Também é possível visualizar os logs de um serviço específico:
-
-```bash
-docker compose logs -f nome-do-servico
-```
-
-### 4. **Configuração da Chave de Acesso (Token):**
-   O serviço utiliza a API do 🔗 **Documentação:** [OpenRouteService API Documentation](https://openrouteservice.org/dev/), que exige uma chave de acesso para funcionar. Acesse o site oficial, crie sua conta gratuita para gerar o token e configure-o no arquivo `.env` na raiz do projeto:
+2. Crie um arquivo `.env` na raiz do projeto com o seu token da API:
    ```env
    ORS_TOKEN=seu_token_aqui
+   ```
+
+3. Suba o ambiente com o Docker Compose:
+   ```bash
+   docker compose up -d --build
+   ```
+
+A API estará disponível em `http://localhost:8080`.
+
+---
+
+## 📌 Endpoints Principais
+
+### 🚴 Simulação de Rota
+
+`POST /api/v1/routes/simulate`
+
+Recebe os pontos de origem, destino e perfil de mobilidade para calcular o trajeto entre as coordenadas.
+
+**Headers:**
+- `Content-Type: application/json`
+- `Authorization: Bearer <seu_token_jwt>`
+
+**Request Body:**
+```json
+{
+  "originName": "Casa",
+  "destinationName": "Trabalho",
+  "profile": "CYCLING_REGULAR",
+  "originCoordinates": {
+    "latitude": -16.3267,
+    "longitude": -48.9534
+  },
+  "destinationCoordinates": {
+    "latitude": -16.3300,
+    "longitude": -48.9500
+  }
+}
 ```
 
-### 5. Acesse a API
-
-Após a inicialização, a API estará disponível em:
-
-```text
-http://localhost:8080
-```
-
-### 6. Encerrar a aplicação
-
-Para parar os containers:
-
+**Exemplo via cURL:**
 ```bash
-docker compose down
+curl -X POST http://localhost:8080/api/v1/routes/simulate \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN_JWT" \
+  -d '{
+    "originName": "Casa",
+    "destinationName": "Trabalho",
+    "profile": "CYCLING_REGULAR",
+    "originCoordinates": {
+      "latitude": -16.3267,
+      "longitude": -48.9534
+    },
+    "destinationCoordinates": {
+      "latitude": -16.3300,
+      "longitude": -48.9500
+    }
+  }'
 ```
 
-Caso também queira remover os volumes:
-
-```bash
-docker compose down -v
-```
-
-> ⚠️ O comando `docker compose down -v` remove os volumes persistidos, podendo apagar os dados armazenados no banco de dados.
-
 ---
 
-## 🌐 APIs Externas
+## 🌐 APIs Externas Integradas
 
-### 🗺️ OpenRouteService
-
-O **OpenRouteService** é utilizado para realizar o cálculo das rotas da aplicação.
-
-A API recebe as coordenadas de origem e destino e retorna informações utilizadas pelo EcoPath para representar o percurso, como:
-
-- Distância do percurso;
-- Tempo estimado de viagem;
-- Geometria da rota;
-- Coordenadas do trajeto.
-
-Esses dados são utilizados como base para o planejamento das rotas realizadas pelos usuários.
-
-🔗 **Documentação:** [OpenRouteService API Documentation](https://openrouteservice.org/dev/#/api-docs)
+* 🗺️ **[OpenRouteService](https://openrouteservice.org/dev/#/api-docs):** Responsável pelos cálculos geográficos, geometria da rota, distância e tempo estimado.
+* ⛅ **[Open-Meteo](https://open-meteo.com/en/docs):** Fornece métricas climáticas (temperatura, vento, chuva) e o Índice de Qualidade do Ar (AQI) para recomendações de saúde no percurso.
 
 ---
-
-### ⛅ Open-Meteo
-
-A Open-Meteo é utilizada para obter informações meteorológicas e ambientais relacionadas à localização do percurso.
-
-A integração permite consultar informações como:
-
-* Temperatura;
-* Precipitação;
-* Velocidade do vento;
-* Condições meteorológicas;
-* **Índice de qualidade do ar (AQI);**
-* **Status e recomendações de saúde para o percurso;**
-* Previsões para diferentes horários.
-
-A proposta é utilizar essas informações em conjunto com os dados fornecidos pelo OpenRouteService, permitindo analisar as condições climáticas e ambientais ao longo do percurso.
-
-🔗 **Documentações:**
-* [Open-Meteo Weather Forecast API Documentation](https://open-meteo.com/en/docs)
-* [Open-Meteo Air Quality API Documentation](https://open-meteo.com/en/docs/air-quality-api)
-
----
-
-🗺️ Roadmap / Próximas Evoluções
-
-O EcoPath está em constante evolução arquitetural. As próximas features planejadas para o projeto incluem:
-- [ ] **Múltiplas Rotas Alternativas:** Migração do consumo da OpenRouteService de `GET` para `POST` para suportar o cálculo de trajetos alternativos.
-- [ ] **Strategy Pattern:** Desacoplamento dos perfis de mobilidade ativa (ciclismo e caminhada) em estratégias independentes.
-- [ ] **Virtual Threads (Java 21):** Utilização de threads virtuais para paralelizar e otimizar o consumo das APIs de clima (Open-Meteo) para múltiplos trajetos.
 
 
