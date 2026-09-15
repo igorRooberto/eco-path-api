@@ -4,6 +4,7 @@ import com.igor.EcoPathAPI.domain.port.RoutingClient;
 import com.igor.EcoPathAPI.domain.model.RouteMetrics;
 import com.igor.EcoPathAPI.dto.route.RouteRequest;
 import com.igor.EcoPathAPI.dto.route.RouteResponseDto;
+import com.igor.EcoPathAPI.exception.base.NotFoundException;
 import com.igor.EcoPathAPI.infrastructure.openRoute.dto.OpenRouteRequest;
 import com.igor.EcoPathAPI.repository.RouteCacheRepository;
 import com.igor.EcoPathAPI.strategy.RouteStrategy;
@@ -28,6 +29,10 @@ public class RouteService {
         OpenRouteRequest openRouteRequest = strategy.buildRequest(routeRequest.originCoordinates(), routeRequest.destinationCoordinates());
 
         List<RouteMetrics> metrics = routingClient.calculateRouteMetrics(routeRequest.profile(),openRouteRequest);
+
+        if(metrics.isEmpty()){
+            throw new NotFoundException("Nenhuma Rota Encontrada");
+        }
 
         routeCacheRepository.saveAll(metrics);
 
