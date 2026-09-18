@@ -57,7 +57,7 @@ A API estará disponível em `http://localhost:8080`.
 
 ### 🚴 Simulação de Rota
 
-`POST /api/v1/routes/simulate`
+`POST /route/simulate`
 
 Recebe os pontos de origem, destino e perfil de mobilidade para calcular o trajeto entre as coordenadas.
 
