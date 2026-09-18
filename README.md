@@ -16,7 +16,7 @@ Uma API RESTful desenvolvida em Spring Boot para simulação e cálculo de rotas
 ## 🛠️ Tecnologias Utilizadas
 
 * **Java 21**
-* **Spring Boot 3** (Web, Data JPA, Security)
+* **Spring Boot 4.1.0** (Web, Data JPA, Security)
 * **Spring Security & JWT** (Autenticação e Autorização)
 * **PostgreSQL 16** (Banco de dados relacional)
 * **Docker & Docker Compose** (Containerização)
